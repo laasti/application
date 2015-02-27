@@ -10,19 +10,12 @@ namespace Laasti\Services;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-
 /**
  *
  * @author Sonia
  */
-interface MiddlewareInterface
+interface MiddlewareTerminateInterface
 {
-
-    /**
-     *
-     * @param Request $request
-     * @return Request|Response
-     */
-    public function handle(Request $request);
-
+    //put your code here
+    public function terminate(Request $request, Response $response);
 }

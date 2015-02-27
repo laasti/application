@@ -28,4 +28,6 @@ interface StackInterface
      * @return Response
      */
     public function execute(Request $request);
+    
+    public function close(Request $request, Response $response);
 }
