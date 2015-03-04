@@ -12,10 +12,10 @@
         "league/route": "master"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.7@dev",
+        "phpunit/phpunit": "~4.5",
         "laasti/stack": "master",
         "laasti/profiler": "master",
-        "squizlabs/php_codesniffer": "dev-master"
+        "squizlabs/php_codesniffer": "~2.3"
     },
     "repositories": [
         {

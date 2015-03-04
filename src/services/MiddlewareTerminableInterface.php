@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @author Sonia
  */
-interface MiddlewareTerminateInterface
+interface MiddlewareTerminableInterface
 {
     //put your code here
     public function terminate(Request $request, Response $response);
