@@ -24,7 +24,7 @@ class Application extends \League\Container\Container
 
     public function __construct($config = [], $factory = null)
     {
-        parent::__construct([], null);
+        parent::__construct($config, $factory);
 
         //Make sure the app is the container, and only one exists
         $this->add('League\Container\ContainerInterface', $this, true);
@@ -34,7 +34,7 @@ class Application extends \League\Container\Container
     public function getRouter() {
 
         if (is_null($this->router)) {
-            $this->add('Laasti\Route\RouteCollector', null, true)->withArguments(['', $this->getRoutes(), $this]);
+            $this->add('Laasti\Route\RouteCollector', null, true)->withArguments([$this->getRoutes(), $this]);
             $this->router = $this->get('Laasti\Route\RouteCollector');
         }
 
