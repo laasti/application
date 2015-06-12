@@ -23,6 +23,7 @@
         "vlucas/phpdotenv": "~2.0.1",
         "monolog/monolog": "~1.13",
         "league/booboo": "dev-master",
+        "league/flysystem": "~1.0",
         "symfony/http-foundation" : "~2.7"
     },
     "license": "MIT",

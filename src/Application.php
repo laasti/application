@@ -33,6 +33,7 @@ class Application extends \League\Container\Container
             'Laasti\Providers\SymfonySessionProvider',
             'Laasti\Providers\MonologProvider',
             'Laasti\Providers\BooBooProvider',
+            'Laasti\Providers\FlySystemProvider',
         ],
         'routes' => [],
         'middlewares' => [
