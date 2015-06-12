@@ -23,11 +23,6 @@ class SpotProvider extends ServiceProvider
         'Spot\Locator'
     ];
 
-    protected $requires = [
-        'db.dsn',
-        'db.driver'
-    ];
-
     public function register()
     {
         $c = $this->getContainer();
