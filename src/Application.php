@@ -30,6 +30,7 @@ class Application extends \League\Container\Container
             ]
         ],
         'providers' => [
+            'Laasti\Providers\SymfonySessionProvider',
             'Laasti\Providers\MonologProvider',
             'Laasti\Providers\BooBooProvider',
         ],
