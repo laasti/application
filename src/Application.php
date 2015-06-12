@@ -24,6 +24,9 @@ class Application extends \League\Container\Container
 
     public function __construct($config = [], $factory = null)
     {
+        if (!isset($config['di'])) {
+            $config = ['di' => $config];
+        }
         parent::__construct($config, $factory);
 
         //Make sure the app is the container, and only one exists
@@ -78,5 +81,12 @@ class Application extends \League\Container\Container
         $response->send();
 
         $this->getStack()->close($request, $response);
+    }
+    
+    public static function loadEnvironment($dir) 
+    {
+        
+        $dotenv = new \Dotenv\Dotenv($dir);
+        $dotenv->load();
     }
 }
