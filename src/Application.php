@@ -36,6 +36,7 @@ class Application extends \League\Container\Container
             'Laasti\Providers\FlySystemProvider',
             'Laasti\Providers\SpotProvider',
             'Laasti\Providers\ValitronProvider',
+            'Laasti\Providers\GregwarImageProvider',
         ],
         'routes' => [],
         'middlewares' => [
