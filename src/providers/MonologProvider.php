@@ -19,24 +19,43 @@ class MonologProvider extends ServiceProvider
 {
 
     protected $provides = [
-        'Psr\Log\LoggerInterface',
-        'Monolog\Handler\HandlerInterface'
+        'Psr\Log\LoggerInterface'
+    ];
+    
+    protected $defaultConfig = [
+        'Default' => [
+            'Monolog\Handler\BrowserConsoleHandler' => [\Monolog\Logger::DEBUG]
+        ]
     ];
 
     public function register()
     {
-        $c = $this->getContainer();
-        
-        //Default error handler
-        if (!$c->isRegistered('Monolog\Handler\HandlerInterface')) {
-            $c->add('Monolog\Handler\HandlerInterface', 'Monolog\Handler\BrowserConsoleHandler');
+        $di = $this->getContainer();
+        if (isset($di['Monolog.config']) && is_array($di['Monolog.config'])) {
+            $config = $di['Monolog.config'];
+        } else {
+            $config = $this->defaultConfig;
         }
-        $c->add('Psr\Log\LoggerInterface', function() use ($c) {
-            $logger = new \Monolog\Logger('Laasti');
-            $handler = $c->get('Monolog\Handler\HandlerInterface');
-            $logger->pushHandler($handler);
-            return $logger;
-        }, true);
+        
+        foreach ($config as $channel => $handlers) {
+            //Default error handler
+            $di->add('Monolog.Logger.'.$channel, $this->createLogger($channel, $handlers), true);
+        }
+        
+        if (!$di->isRegistered('Psr\Log\LoggerInterface')) {
+            $channels = array_keys($config);
+            $di->add('Psr\Log\LoggerInterface', $di->get('Monolog.Logger.'.array_shift($channels)));
+        }
+    }
+    
+    protected function createLogger($channel, $handlers) {
+        $di = $this->getContainer();
+        $logger = new \Monolog\Logger($channel);
+        foreach ($handlers as $class => $arguments) {
+            $di->add($class)->withArguments($arguments);
+            $logger->pushHandler($di->get($class));
+        }
+        return $logger;
     }
 
 }

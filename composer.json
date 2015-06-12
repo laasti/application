@@ -9,11 +9,11 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "C:/wamp/www/laasti/stack"
+            "url": "https://github.com/Laasti/stack"
         },
         {
             "type": "vcs",
-            "url": "C:/wamp/www/laasti/route"
+            "url": "https://github.com/Laasti/route"
         }
     ],
     "require": {
@@ -21,6 +21,8 @@
         "laasti/stack": "dev-master",
         "laasti/route": "dev-develop",
         "vlucas/phpdotenv": "~2.0.1",
+        "monolog/monolog": "~1.13",
+        "league/booboo": "dev-master",
         "symfony/http-foundation" : "~2.7"
     },
     "license": "MIT",
