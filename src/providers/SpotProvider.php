@@ -36,7 +36,7 @@ class SpotProvider extends ServiceProvider
         if (!$c->isRegistered('Spot\Config')) {
             $c->add('Spot\Config', function() use ($c) {
                 $cfg = new \Spot\Config();
-                $cfg->addConnection($c['db.driver'], $c['db.dsn']);
+                $cfg->addConnection($c['Spot.driver'], $c['Spot.dsn']);
                 return $cfg;
             });
         }

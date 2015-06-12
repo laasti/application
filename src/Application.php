@@ -34,6 +34,7 @@ class Application extends \League\Container\Container
             'Laasti\Providers\MonologProvider',
             'Laasti\Providers\BooBooProvider',
             'Laasti\Providers\FlySystemProvider',
+            'Laasti\Providers\SpotProvider',
         ],
         'routes' => [],
         'middlewares' => [
