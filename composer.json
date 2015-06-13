@@ -32,7 +32,8 @@
         "monolog/monolog": "~1.13",
         "league/booboo": "dev-master",
         "league/flysystem": "~1.0",
-        "symfony/http-foundation" : "~2.7"
+        "symfony/http-foundation" : "~2.7",
+        "symfony/translation": "~2.7"
     },
     "license": "MIT",
     "authors": [

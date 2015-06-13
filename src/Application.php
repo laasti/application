@@ -38,6 +38,7 @@ class Application extends \League\Container\Container
             'Laasti\Providers\ValitronProvider',
             'Laasti\Providers\GregwarImageProvider',
             'Laasti\Providers\MailerProvider',
+            'Laasti\Providers\SymfonyTranslationProvider',
         ],
         'routes' => [],
         'middlewares' => [
@@ -52,7 +53,6 @@ class Application extends \League\Container\Container
         $this->config = array_merge_recursive($this->config, $config);
         
         $di_config = isset($config['di']) ? $config['di'] : [];
-        
         parent::__construct(['di' => $di_config], $factory);
         
         $this->loadServiceProviders($this->config['providers']);
