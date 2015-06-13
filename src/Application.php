@@ -37,6 +37,7 @@ class Application extends \League\Container\Container
             'Laasti\Providers\SpotProvider',
             'Laasti\Providers\ValitronProvider',
             'Laasti\Providers\GregwarImageProvider',
+            'Laasti\Providers\MailerProvider',
         ],
         'routes' => [],
         'middlewares' => [
@@ -55,7 +56,9 @@ class Application extends \League\Container\Container
         parent::__construct(['di' => $di_config], $factory);
         
         $this->loadServiceProviders($this->config['providers']);
-        $this->registerErrorHandler($this->config['error_handler']);
+        if (isset($this->config['error_handler'])) {
+            $this->registerErrorHandler($this->config['error_handler']);
+        }
 
         //Make sure the app is the container, and only one exists
         $this->add('League\Container\ContainerInterface', $this, true);
