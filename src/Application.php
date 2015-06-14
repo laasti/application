@@ -38,6 +38,7 @@ class Application extends \League\Container\Container
             'Laasti\Providers\ValitronProvider',
             'Laasti\Providers\GregwarImageProvider',
             'Laasti\Providers\MailerProvider',
+            'Laasti\Providers\ResponseProvider',
             'Laasti\Providers\SymfonyTranslationProvider',
         ],
         'routes' => [],
