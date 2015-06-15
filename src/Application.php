@@ -51,7 +51,7 @@ class Application extends \League\Container\Container
 
     public function __construct($config = [], $factory = null)
     {
-        $this->config = array_merge_recursive($this->config, $config);
+        $this->config = array_merge($this->config, $config);
         
         $di_config = isset($config['di']) ? $config['di'] : [];
         parent::__construct(['di' => $di_config], $factory);
