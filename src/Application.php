@@ -81,8 +81,8 @@ class Application extends \League\Container\Container
         if (is_null($this->routes)) {
             $this->add('League\Route\RouteCollection', null, true)->withArgument($this);
             $this->routes = $this->get('League\Route\RouteCollection');
-            $this->routes->setStrategy($this->get('Laasti\Route\Strategies\RouteStrategy'));
-            $this->addRoutesFromConfig();
+            $this->routes->setStrategy($this->get('Laasti\Route\Strategies\TwoStepControllerStrategy'));
+            $this->addRoutesFromConfig($this->config['routes']);
         }
 
         return $this->routes;
@@ -111,8 +111,8 @@ class Application extends \League\Container\Container
             $this->add('Symfony\Component\HttpFoundation\Request', $request, true);
         }
         
-        if (is_null($this->router)) {
-            $this->getRouter();
+        if (is_null($this->routes)) {
+            $this->getRoutes();
         }
 
         $response = $this->getStack()->execute($request);
@@ -127,6 +127,29 @@ class Application extends \League\Container\Container
         $dotenv->load();
     }
     
+    public function addServiceProvider($provider)
+    {
+        if (is_string($provider)) {
+            $provider = $this->get($provider);
+        }
+        if (! $provider instanceof \League\Container\ServiceProvider) {
+            throw new \InvalidArgumentException(
+                'When registering a service provider, you must provide either and instance of ' .
+                '[\League\Container\ServiceProvider] or a fully qualified class name'
+            );
+        }
+        
+        $provider->setContainer($this);
+        
+        if ($provider instanceof \Laasti\Providers\RoutableProviderInterface) {
+            $this->addRoutesFromConfig($provider->getRoutes());
+        }
+
+        $this->providers[] = $provider;
+
+        return $this;
+    }
+    
     protected function loadServiceProviders($providers = []) {
         foreach ($providers as $provider) {
             $this->addServiceProvider($provider);
@@ -134,13 +157,9 @@ class Application extends \League\Container\Container
         return $this;
     }
     
-    protected function addRoutesFromConfig() {
-        foreach ($this->config['routes'] as $route) {
-            if (is_array($route)) {
-                call_user_func_array(array($this->getRouter(), 'create'), $route);
-            } else {
-                $this->getRouter()->add($route);          
-            }
+    protected function addRoutesFromConfig($config) {
+        foreach ($config as $route) {
+            call_user_func_array(array($this->getRoutes(), 'addRoute'), $route);
         }
         return $this;
     }
