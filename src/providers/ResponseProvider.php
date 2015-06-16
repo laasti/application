@@ -23,7 +23,13 @@ class ResponseProvider extends ServiceProvider
     ];
     
     protected $defaultConfig = [
-        'responder' => ['Laasti\Response\Responder', ['Dflydev\DotAccessData\DataInterface', 'Laasti\Response\TemplateEngineInterface']],
+        'responder' => [
+            'Laasti\Response\Responder', [
+                'Dflydev\DotAccessData\DataInterface', 'Laasti\Response\TemplateEngineInterface',
+                'Symfony\Component\HttpFoundation\Response', 'Symfony\Component\HttpFoundation\JsonResponse',
+                'Symfony\Component\HttpFoundation\RedirectResponse', 'Laasti\Response\ViewResponse'
+            ]
+        ],
         'template_engine' => 'Laasti\Response\Engines\PlainPhp',
         'locations' => []
     ];
@@ -44,9 +50,13 @@ class ResponseProvider extends ServiceProvider
         if (!$di->isRegistered('Dflydev\DotAccessData\DataInterface')) {
             $di->add('Dflydev\DotAccessData\DataInterface', 'Dflydev\DotAccessData\Data');
         }
+
+        if (!$di->isRegistered('Laasti\Response\ViewResponse')) {
+            $di->add('Laasti\Response\ViewResponse', 'Laasti\Response\ViewResponse')->withArguments(['Laasti\Response\TemplateEngineInterface']);
+        }
         
         list($responder_class, $responder_args) = $config['responder'];
-        $di->add('Laasti\Response\ResponderInterface', $responder_class)->withArguments($responder_args);
+        $di->add('Laasti\Response\ResponderInterface', $responder_class, true)->withArguments($responder_args);
     }
 
 }
