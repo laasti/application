@@ -5,6 +5,7 @@ namespace Laasti;
 //TODO: provide my own interfaces as I don't use anything else from the HTTP Kernel package
 //use Laasti\Services\StackInterface;
 //use Laasti\Services\RouteCollectionInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 class Application extends \League\Container\Container
 {
