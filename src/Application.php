@@ -30,7 +30,7 @@ class Application extends \League\Container\Container
                 ]
             ]
         ],
-        'providers' => [
+        'system_providers' => [
             'Laasti\Providers\SymfonySessionProvider',
             'Laasti\Providers\MonologProvider',
             'Laasti\Providers\BooBooProvider',
@@ -57,6 +57,7 @@ class Application extends \League\Container\Container
         $di_config = isset($config['di']) ? $config['di'] : [];
         parent::__construct(['di' => $di_config], $factory);
         
+        $this->loadServiceProviders($this->config['system_providers']);
         $this->loadServiceProviders($this->config['providers']);
         if (isset($this->config['error_handler'])) {
             $this->registerErrorHandler($this->config['error_handler']);
