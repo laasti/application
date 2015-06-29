@@ -19,7 +19,9 @@ class BooBooProvider extends ServiceProvider
 {
 
     protected $provides = [
-        'League\BooBoo\Runner'
+        'League\BooBoo\Runner',
+        'League\BooBoo\Formatter\HtmlTableFormatter',
+        'League\BooBoo\Handler\LogHandler'
     ];
     
     protected $defaultConfig = [

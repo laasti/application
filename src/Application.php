@@ -33,8 +33,16 @@ class Application extends \League\Container\Container
                 'class' => 'Laasti\Stack\ContainerStack',
                 'arguments' => ['League\Container\ContainerInterface'],
             ],
-            'Symfony\Component\HttpFoundation\Request' => [
-                'class' => 'Symfony\Component\HttpFoundation\Request'
+            'Laasti\Route\Middlewares\RouteMiddleware' => [
+                'class' => 'Laasti\Route\Middlewares\RouteMiddleware',
+                'arguments' => ['League\Route\RouteCollection']
+            ],
+            'Laasti\Route\Strategies\TwoStepControllerStrategy' => [
+                'class' => 'Laasti\Route\Strategies\TwoStepControllerStrategy'
+            ],
+            'Laasti\Route\Middlewares\TwoStepControllerMiddleware' => [
+                'class' => 'Laasti\Route\Middlewares\TwoStepControllerMiddleware',
+                'arguments' => ['League\Container\ContainerInterface']
             ]
         ],
         'system_providers' => [
@@ -52,16 +60,16 @@ class Application extends \League\Container\Container
         'routes' => [],
         'middlewares' => [
             'Laasti\Route\Middlewares\RouteMiddleware',
-            'Laasti\Route\Middlewares\ControllerMiddleware'
+            'Laasti\Route\Middlewares\TwoStepControllerMiddleware'
         ],
         'error_handler' => ['League\BooBoo\Runner', 'register'],
     ];
 
     public function __construct($config = [], $factory = null)
     {
+        $di_config = array_merge($this->config['di'], isset($config['di']) ? $config['di'] : []);
+        $config['di'] = $di_config;
         $this->config = array_merge($this->config, $config);
-        
-        $di_config = isset($config['di']) ? $config['di'] : [];
         parent::__construct(['di' => $di_config], $factory);
         
         $this->loadServiceProviders($this->config['system_providers']);
@@ -69,7 +77,6 @@ class Application extends \League\Container\Container
         if (isset($this->config['error_handler'])) {
             $this->registerErrorHandler($this->config['error_handler']);
         }
-
         //Make sure the app is the container, and only one exists
         $this->add('League\Container\ContainerInterface', $this, true);
         $this->add('League\Container\Container', $this, true);
@@ -106,6 +113,11 @@ class Application extends \League\Container\Container
         }
         return $this->stack;
     }
+    
+    public function getLogger()
+    {
+        return $this->get('Psr\Log\LoggerInterface');
+    }
 
     /**
      * Handles the request and delivers the response.
@@ -114,10 +126,12 @@ class Application extends \League\Container\Container
      */
     public function run(Request $request = null)
     {
-        if (is_null($request)) {
-            $request_obj = $this->get('Symfony\Component\HttpFoundation\Request');
+        if (is_null($request) && ! $this->isRegistered('Symfony\Component\HttpFoundation\Request')) {
+            $request_obj =  new \Symfony\Component\HttpFoundation\Request;
             $request = $request_obj::createFromGlobals();
             $this->add('Symfony\Component\HttpFoundation\Request', $request, true);
+        } else if (is_null($request)) {
+            $request = $this->get('Symfony\Component\HttpFoundation\Request');
         }
         
         if (is_null($this->routes)) {
@@ -188,5 +202,11 @@ class Application extends \League\Container\Container
         call_user_func($callback);
         
         return $this;
+    }
+    
+    protected function reflect($class)
+    {
+        $this->getLogger()->debug('Reflection was used on class "'.$class.'". You might want to avoid this in production.');
+        return parent::reflect($class);
     }
 }
