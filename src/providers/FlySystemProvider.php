@@ -43,6 +43,7 @@ class FlySystemProvider extends ServiceProvider
         } else {
             $config = $this->defaultConfig;
         }
+        $di->add('League\Flysystem\Filesystem');
         $di->add('League\Flysystem\MountManager', function() use ($di, $config) {
             $manager = new \League\Flysystem\MountManager;
             foreach ($config as $mount => $adapter_config) {

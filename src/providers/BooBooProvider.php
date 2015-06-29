@@ -38,6 +38,9 @@ class BooBooProvider extends ServiceProvider
         if (!$di->isRegistered('League\BooBoo\Handler\LogHandler')) {
             $di->add('League\BooBoo\Handler\LogHandler')->withArgument('Psr\Log\LoggerInterface');
         }
+        if (!$di->isRegistered('League\BooBoo\Formatter\HtmlTableFormatter')) {
+            $di->add('League\BooBoo\Formatter\HtmlTableFormatter');
+        }
         $config = $this->defaultConfig;
         
         if (isset($di['BooBoo.config']) && is_array($di['BooBoo.config'])) {

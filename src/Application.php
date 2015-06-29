@@ -28,6 +28,13 @@ class Application extends \League\Container\Container
                 'Pixms' => [
                     'Monolog\Handler\BrowserConsoleHandler' => [\Monolog\Logger::DEBUG]
                 ]
+            ],
+            'Laasti\Stack\ContainerStack' => [
+                'class' => 'Laasti\Stack\ContainerStack',
+                'arguments' => ['League\Container\ContainerInterface'],
+            ],
+            'Symfony\Component\HttpFoundation\Request' => [
+                'class' => 'Symfony\Component\HttpFoundation\Request'
             ]
         ],
         'system_providers' => [
@@ -132,7 +139,7 @@ class Application extends \League\Container\Container
     public function addServiceProvider($provider)
     {
         if (is_string($provider)) {
-            $provider = $this->get($provider);
+            $provider = new $provider;
         }
         if (! $provider instanceof \League\Container\ServiceProvider) {
             throw new \InvalidArgumentException(

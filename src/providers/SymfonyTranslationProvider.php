@@ -42,6 +42,12 @@ class SymfonyTranslationProvider extends ServiceProvider
         if (isset($di['SymfonyTranslation.config']) && is_array($di['SymfonyTranslation.config'])) {
             $config = array_merge($config, $di['SymfonyTranslation.config']);
         }
+        if (!$di->isRegistered($config['message_selector'])) {
+            $di->add($config['message_selector']);
+        }
+        if (!$di->isRegistered($config['loaders']['array'])) {
+            $di->add($config['loaders']['array']);
+        }
 
         $di->add('Symfony\Component\Translation\Translator', function() use ($di, $config) {
             $selector = $di->get($config['message_selector']);

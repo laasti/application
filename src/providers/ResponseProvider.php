@@ -46,7 +46,8 @@ class ResponseProvider extends ServiceProvider
         if (!$di->isRegistered('Laasti\Response\Engines\TemplateEngineInterface')) {
             $di->add('Laasti\Response\Engines\TemplateEngineInterface', $config['template_engine'])->withArguments($config['locations']);
         }
-
+        $di->add('Symfony\Component\HttpFoundation\Response');
+        $di->add('Symfony\Component\HttpFoundation\JsonResponse');
         if (!$di->isRegistered('Dflydev\DotAccessData\DataInterface')) {
             $di->add('Dflydev\DotAccessData\DataInterface', 'Dflydev\DotAccessData\Data');
         }
