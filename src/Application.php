@@ -140,6 +140,10 @@ class Application extends \League\Container\Container
 
         $response = $this->getStack()->execute($request);
         $response->send();
+        
+        $this->getLogger()->debug('There are '.count($this->items).' items registered to the container.');
+        $this->getLogger()->debug('There are '.count($this->singletons).' singletons registered to the container.');
+        $this->getLogger()->debug('There are '.count($this->providers).' providers registered to the container.');
 
         $this->getStack()->close($request, $response);
     }
@@ -181,6 +185,10 @@ class Application extends \League\Container\Container
     }
     
     protected function addRoutesFromConfig($config) {
+        //TODO: Remove
+        if (is_null($config)) {
+            return $this;
+        }
         foreach ($config as $route) {
             call_user_func_array(array($this->getRoutes(), 'addRoute'), $route);
         }
