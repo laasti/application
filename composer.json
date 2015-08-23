@@ -1,45 +1,6 @@
 {
     "name": "laasti/application",
-    "description": "The core for the Laasti Frameworks. Provides interfaces to implement essential services",
-    "autoload": {
-        "psr-4": {
-            "Laasti\\": "src/"
-        }
-    },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/Laasti/stack"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/Laasti/response"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/Laasti/mailer"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/Laasti/route"
-        }
-    ],
-    "require": {
-        "league/container": "~1.3",
-         "vlucas/valitron": "~1.1",
-         "gregwar/image": "dev-master",
-        "vlucas/spot2": "~2.1",
-        "laasti/stack": "dev-master",
-        "laasti/mailer": "dev-master",
-        "laasti/route": "dev-develop",
-        "laasti/response": "dev-master",
-        "vlucas/phpdotenv": "~2.0.1",
-        "monolog/monolog": "~1.13",
-        "league/booboo": "dev-master",
-        "league/flysystem": "~1.0",
-        "symfony/http-foundation" : "~2.7",
-        "symfony/translation": "~2.7"
-    },
+    "description": "The core for the Laasti Framework.",
     "license": "MIT",
     "authors": [
         {
@@ -47,5 +8,27 @@
             "email": "contact@nebulousweb.com"
         }
     ],
-    "minimum-stability": "dev"
+    "autoload": {
+        "psr-4": {
+            "Laasti\\": "src/"
+        }
+    },
+    "require": {
+        "league/container": "~1.3",
+        "laasti/stack": "~1.0",
+        "laasti/route": "~1.0",
+        "laasti/response": "~1.0"
+    },
+    "suggest": {
+         "vlucas/valitron": "~1.1",
+         "gregwar/image": "dev-master",
+         "vlucas/spot2": "~2.1",
+         "laasti/mailer": "dev-master",
+         "vlucas/phpdotenv": "~2.0.1",
+         "monolog/monolog": "~1.13",
+         "league/booboo": "dev-master",
+        "league/flysystem": "~1.0",
+        "symfony/http-foundation" : "~2.7",
+        "symfony/translation": "~2.7"
+    }
 }
