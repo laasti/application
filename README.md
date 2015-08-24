@@ -1,8 +1,16 @@
-# Laasti/Lazydata
+# Laasti/application
 
-Provides lazy loading of data to views. Dot notation can be used.
+The core of the Laasti framework.
 
-Requires dflydev/dot-access-data to enable the use of dot notation to add data.
+Provides basic services that any apps need:
+
+1. Dependency injection container using: league/container
+2. Routing to controllers using: laasti/route (which uses league/route)
+3. Request formatting and OO Response using: symfony/http-foundation
+4. Application middlewares using: laasti/stack
+5. Template rendering using: laasti/response
+6. Logging using: monolog/monolog
+7. Error handling using: league/booboo
 
 ## Installation
 
@@ -12,62 +20,17 @@ composer require laasti/lazydata
 
 ## Usage
 
-All PHP callables are supported. To pass arguments to calls, use an array like ['my_callable', [/* args here */]].
-
-Without League\Container:
-
 ```php
-
-$data = [
-    'title' => 'render_title',
-    'with_arguments' => ['my_callable', [/* args here */]],
-    'with_class' => ['my_class', 'my_function'], //or 'my_class::my_function',
-    'meta' => function() {
-        return [
-            'description' => 'My description'
-        ]
-    }
+$config = [
+    'routes' => [
+        ['GET', '/welcome', 'MyControllerClass::welcome'],
+    ],
 ];
+$app = new Laasti\Application\Application();
 
-$viewdata = new Laasti\Lazydata\Data($data);
-$viewdata->set('username', function() {return 'George';});
-
-//You can use dot notation within the lazy loaded data
-$viewdata->get('meta.description'); //Returns 'My description'
+$app->run(Symfony\Component\HttpFoundation\Request::create('/welcome')); //Outputs
 
 ```
-
-With league/container:
-
-```php
-
-//We need to setup the ContainerResolver that comes with the package
-$container = new League\Container\Container;
-$container->add('Laasti\Lazydata\ResolverInterface', 'Laasti\Lazydata\ContainerResolver')->withArgument($container);
-$container->add('Laasti\Lazydata\Data')->withArguments([[], 'Laasti\Lazydata\ResolverInterface']);
-
-$viewdata = $container->get('Laasti\Lazydata\Data);;
-
-$container->add('container_key', 'some value');
-
-$viewdata->set('viewdata_key', 'container_key');
-$viewdata->get('viewdata_key'); //Returns 'some value'
-
-//Returns the value from SomeClass->myMethod();, SomeClass is resolved with the container
-$viewdata->set('viewdata_callable_key', 'SomeClass::myMethod');
-$viewdata->get('viewdata_callable_key');
-
-//Returns the value from SomeClass->myMethod('George'); SomeClass is resolved with the container
-$viewdata->set('viewdata_callable_args_key', ['SomeClass::myMethod', ['George']]);
-$viewdata->get('viewdata_callable_args_key');
-
-```
-
-The ContainerResolver falls back on the default resolver if it cannot resolve the call.
-
-> **Note:**
-> Does not work with league/container invokables. It is a limitation due to the way registered callables are stored,
-> there is no way to check if a callable is registered to the container in the public API.
 
 ## Contributing
 
