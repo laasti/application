@@ -117,12 +117,13 @@ class Application extends Container
         if (is_null($this->router)) {
             $this->getRouter();
         }
-
-        $this->getStack()->execute($request);
         
+        $this->getStack()->execute($request);
         $this->getLogger()->debug('There are '.count($this->items).' items registered to the container.');
         $this->getLogger()->debug('There are '.count($this->singletons).' singletons registered to the container.');
         $this->getLogger()->debug('There are '.count($this->providers).' providers registered to the container.');
+        $this->getLogger()->debug('Script execution time: '.number_format(microtime(true) - $request->server->get('REQUEST_TIME_FLOAT'), 3).' s');
+        $this->getLogger()->debug('Memory usage: '.number_format(memory_get_usage()/1024/1024, 3).' MB.');
     }
 
     /**

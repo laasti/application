@@ -29,7 +29,7 @@ class BooBooProvider extends ServiceProvider
         $di = $this->getContainer();
 
         if (isset($di['config.error_handler']) && is_array($di['config.error_handler'])) {
-            $config = array_merge_recursive($this->defaultConfig, $di['config.error_handler']);
+            $config = array_merge($this->defaultConfig, $di['config.error_handler']);
         } else {
             $config = $this->defaultConfig;
         }

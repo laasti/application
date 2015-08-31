@@ -15,7 +15,7 @@ Provides basic services that any apps need:
 ## Installation
 
 ```
-composer require laasti/lazydata
+composer require laasti/application
 ```
 
 ## Usage
