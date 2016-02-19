@@ -4,13 +4,48 @@ The core of the Laasti framework.
 
 Provides basic services that any apps need:
 
-1. Dependency injection container using: league/container
-2. Routing to controllers using: laasti/route (which uses league/route)
-3. Request formatting and OO Response using: symfony/http-foundation
-4. Application middlewares using: laasti/stack
-5. Template rendering using: laasti/response
-6. Logging using: monolog/monolog
-7. Error handling using: league/booboo
+## The core
+
+### Dependency Injection with League/container
+
+### Application configuration
+
+### Multiple environments (develop, tests, staging, production...)
+
+### Error handling (TODO)
+
+* Reroute exceptions
+* Handle exception by types
+* Notify exceptions by type
+* Manage errors
+
+### Logging psr2
+
+## Input/Output
+
+An abstract kernel implementation that takes an input and generate an output using middlewares.
+
+### Request/Response
+
+Http Kernel implementation takes a PSR7 ServerRequestInterface and outputs a PSR7 ResponseInterface.
+
+### ConsoleCommand/Result (TODO)
+
+Console Kernel takes a command and displays the result
+
+## Http Stuff
+
+### Routing (TODO)
+
+laasti/route: An elegant wrapper for nikic fast routes at its heart
+
+### Session (TODO)
+
+A simple session handler (defaults to native)
+
+### Cookie (TODO)
+
+A cookie object that you can easily attach to your responses (```withHeader('Set-Cookie', (string) $cookie)```)
 
 ## Installation
 
