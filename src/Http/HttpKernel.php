@@ -6,7 +6,7 @@ namespace Laasti\Application\Http;
 use InvalidArgumentException;
 use Laasti\Application\Http\Emitter;
 use Laasti\Application\Http\EmitterInterface;
-use Laasti\Application\Http\HttpRunner;
+use Laasti\Peels\Http\HttpRunner;
 use Laasti\Application\KernelInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
