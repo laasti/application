@@ -6,7 +6,7 @@ class MiddlewareResolver implements MiddlewareResolverInterface
 {
     protected $container;
 
-    public function __construct(\Interop\Container\ContainerInterface $container)
+    public function __construct(\Interop\Container\ContainerInterface $container = null)
     {
         $this->container = $container;
     }

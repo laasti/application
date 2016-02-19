@@ -4,12 +4,12 @@
 namespace Laasti\Application\Http;
 
 use InvalidArgumentException;
+use Laasti\Application\Http\Emitter;
+use Laasti\Application\Http\EmitterInterface;
 use Laasti\Application\Http\HttpRunner;
 use Laasti\Application\KernelInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Zend\Diactoros\Response\EmitterInterface;
-use Zend\Diactoros\Response\SapiEmitter;
 
 class HttpKernel implements KernelInterface
 {
@@ -20,7 +20,7 @@ class HttpKernel implements KernelInterface
     public function __construct(HttpRunner $runner, EmitterInterface $emitter = null, $bufferSize = 1024)
     {
         $this->runner = $runner;
-        $this->emitter = $emitter ?: new SapiEmitter;
+        $this->emitter = $emitter ?: new Emitter;
         $this->bufferSize = $bufferSize;
     }
 

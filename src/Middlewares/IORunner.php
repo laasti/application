@@ -6,7 +6,7 @@ class IORunner
 {
     protected $middlewares;
 
-    public function __construct(array $middlewares)
+    public function __construct(array $middlewares = null)
     {
         $this->middlewares = $middlewares;
 

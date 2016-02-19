@@ -14,14 +14,9 @@
         }
     },
     "require": {
-        "tomphp/config-service-provider": "^0.1.2",
-        "league/container": "~1.3",
-        "league/booboo": "~1.0",
-        "monolog/monolog": "~1.0",
-        "laasti/response": "~1.0",
         "psr/http-message": "1.0",
-        "zendframework/zend-diactoros": "1.3.3",
-        "container-interop/container-interop": "1.1.0"
+        "container-interop/container-interop": "1.1.0",
+        "psr/log": "* 1.0.0"
     },
     "suggest": {
          "vlucas/valitron": "~1.1",
@@ -35,5 +30,11 @@
         "symfony/translation": "~2.7"
     },
     "require-dev": {
+        "zendframework/zend-diactoros": "1.3.3",
+        "league/booboo": "~1.0",
+        "monolog/monolog": "~1.0",
+        "league/container": "~2.0",
+        "laasti/response": "~1.0",
+        "hassankhan/config": "0.10.0"
     }
 }

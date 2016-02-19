@@ -2,15 +2,21 @@
 
 The core of the Laasti framework.
 
+Maximizes flexibility with the use of standards and callables.
+
 Provides basic services that any apps need:
 
 ## The core
 
-### Dependency Injection with League/container
+### Dependency Injection with Container Interop
+
+Reserved words: config, response, request, kernel, error_handler
+Usually used with League/container
 
 ### Application configuration
 
-### Multiple environments (develop, tests, staging, production...)
+* Multiple environments (develop, tests, staging, production...)
+* An ArrayAccess implementation or plain array registered to the config container key
 
 ### Error handling (TODO)
 
@@ -19,7 +25,7 @@ Provides basic services that any apps need:
 * Notify exceptions by type
 * Manage errors
 
-### Logging psr2
+### Logging PSR2
 
 ## Input/Output
 
@@ -33,19 +39,27 @@ Http Kernel implementation takes a PSR7 ServerRequestInterface and outputs a PSR
 
 Console Kernel takes a command and displays the result
 
-## Http Stuff
+## Http Stuff, optional packages
+
+### Psr7 Helpers and Cookie (TODO)
+
+A cookie object that you can easily attach to your responses (```withHeader('Set-Cookie', (string) $cookie)```)
 
 ### Routing (TODO)
 
-laasti/route: An elegant wrapper for nikic fast routes at its heart
+laasti/route: An elegant wrapper for nikic fast routes
 
 ### Session (TODO)
 
 A simple session handler (defaults to native)
 
-### Cookie (TODO)
+### Commands and command bus (TODO)
 
-A cookie object that you can easily attach to your responses (```withHeader('Set-Cookie', (string) $cookie)```)
+chief
+
+### Database access (TODO)
+
+DBAL
 
 ## Installation
 

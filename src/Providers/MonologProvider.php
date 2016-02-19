@@ -22,14 +22,9 @@ class MonologProvider extends ServiceProvider
     public function register()
     {
         $di = $this->getContainer();
-        if (isset($di['config.logger']) && is_array($di['config.logger'])) {
-            $config = array_merge($this->defaultConfig, $di['config.logger']);
-        } else {
-            $config = $this->defaultConfig;
-        }
+        $config = $this->getConfig();
         
         foreach ($config['channels'] as $channel => $handlers) {
-            //Default error handler
             $di->add('monolog.channel.'.$channel, $this->createLogger($channel, $handlers), true);
         }
         
@@ -39,7 +34,8 @@ class MonologProvider extends ServiceProvider
         }
     }
     
-    protected function createLogger($channel, $handlers) {
+    protected function createLogger($channel, $handlers) 
+    {
         $di = $this->getContainer();
         $logger = new \Monolog\Logger($channel);
         foreach ($handlers as $class => $arguments) {
@@ -51,6 +47,19 @@ class MonologProvider extends ServiceProvider
             }
         }
         return $logger;
+    }
+    
+    protected function getConfig()
+    {
+        $di = $this->getContainer();
+        $diConfig = $di->get('config');
+        if (isset($diConfig['monolog']) && is_array($diConfig['monolog'])) {
+            $config = array_merge($this->defaultConfig, $diConfig['monolog']);
+        } else {
+            $config = $this->defaultConfig;
+        }
+        
+        return $config;
     }
 
 }

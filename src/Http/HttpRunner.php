@@ -11,7 +11,7 @@ class HttpRunner
 {
     protected $middlewares;
 
-    public function __construct(array $middlewares)
+    public function __construct(array $middlewares = [])
     {
         $this->middlewares = $middlewares;
 

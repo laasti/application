@@ -8,6 +8,7 @@ class BooBooProvider extends ServiceProvider
 {
 
     protected $provides = [
+        'error_handler',
         'League\BooBoo\Runner',
         'League\BooBoo\Formatter\HtmlTableFormatter',
         'League\BooBoo\Handler\LogHandler'
@@ -27,35 +28,39 @@ class BooBooProvider extends ServiceProvider
     public function register()
     {
         $di = $this->getContainer();
-
-        if (isset($di['config.error_handler']) && is_array($di['config.error_handler'])) {
-            $config = array_merge($this->defaultConfig, $di['config.error_handler']);
-        } else {
-            $config = $this->defaultConfig;
-        }
+        $config = $this->getConfig();
         
-        if (!$di->isRegistered('League\BooBoo\Handler\LogHandler')) {
+        if (!$di->has('League\BooBoo\Handler\LogHandler')) {
             $di->add('League\BooBoo\Handler\LogHandler')->withArgument('Psr\Log\LoggerInterface');
         }
-        if (!$di->isRegistered('League\BooBoo\Formatter\HtmlTableFormatter')) {
+        if (!$di->has('League\BooBoo\Formatter\HtmlTableFormatter')) {
             $di->add('League\BooBoo\Formatter\HtmlTableFormatter');
         }
         
         $di->add('League\BooBoo\Runner', function() use ($di, $config) {
             $runner = new \League\BooBoo\Runner();
-
-            foreach ($config['formatters'] as $class => $error_level) {
-                $formatter = $di->get($class);
+            foreach ($config['formatters'] as $containerKey => $error_level) {
+                $formatter = $di->get($containerKey);
                 $formatter->setErrorLimit($error_level);
                 $runner->pushFormatter($formatter);
             }
-
-            foreach ($config['handlers'] as $class) {
-                $handler = $di->get($class);
+            foreach ($config['handlers'] as $containerKey) {
+                $handler = $di->get($containerKey);
                 $runner->pushHandler($handler);
             }
             return $runner;
         }, true);
     }
-
+    
+    protected function getConfig()
+    {
+        $config = $this->getContainer()->get('config');
+        if (isset($config['booboo']) && is_array($config['booboo'])) {
+            $config = array_merge($this->defaultConfig, $config['booboo']);
+        } else {
+            $config = $this->defaultConfig;
+        }
+        
+        return $config;
+    }
 }
