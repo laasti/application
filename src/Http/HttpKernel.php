@@ -1,16 +1,16 @@
 <?php
 
 
-namespace Laasti\Application\Http;
+namespace Laasti\Http;
 
 use InvalidArgumentException;
-use Laasti\Application\Http\Emitter;
-use Laasti\Application\Http\EmitterInterface;
-use Laasti\Application\KernelInterface;
+use Laasti\Core\KernelInterface;
+use Laasti\Http\Emitter;
+use Laasti\Http\EmitterInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-class HttpKernel implements KernelInterface
+class HttpKernel implements HttpKernelInterface, KernelInterface
 {
     protected $runner;
     protected $bufferSize;

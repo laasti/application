@@ -1,8 +1,10 @@
 <?php
 
-namespace Laasti\Application\Providers;
+namespace Laasti\Core\Providers;
 
-class ConfigFilesProvider extends \League\Container\ServiceProvider
+use League\Container\ServiceProvider\AbstractServiceProvider;
+
+class ConfigFilesProvider extends AbstractServiceProvider
 {
     
     protected $provides = [

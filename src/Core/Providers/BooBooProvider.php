@@ -1,10 +1,12 @@
 <?php
 
-namespace Laasti\Application\Providers;
+namespace Laasti\Core\Providers;
 
-use League\Container\ServiceProvider;
+use League\BooBoo\Runner;
+use League\Container\ServiceProvider\AbstractServiceProvider;
 
-class BooBooProvider extends ServiceProvider
+
+class BooBooProvider extends AbstractServiceProvider
 {
 
     protected $provides = [
@@ -30,15 +32,11 @@ class BooBooProvider extends ServiceProvider
         $di = $this->getContainer();
         $config = $this->getConfig();
         
-        if (!$di->has('League\BooBoo\Handler\LogHandler')) {
-            $di->add('League\BooBoo\Handler\LogHandler')->withArgument('Psr\Log\LoggerInterface');
-        }
-        if (!$di->has('League\BooBoo\Formatter\HtmlTableFormatter')) {
-            $di->add('League\BooBoo\Formatter\HtmlTableFormatter');
-        }
+        $di->add('League\BooBoo\Handler\LogHandler')->withArgument('Psr\Log\LoggerInterface');
+        $di->add('League\BooBoo\Formatter\HtmlTableFormatter');
         
-        $di->add('League\BooBoo\Runner', function() use ($di, $config) {
-            $runner = new \League\BooBoo\Runner();
+        $di->share('League\BooBoo\Runner', function() use ($di, $config) {
+            $runner = new Runner();
             foreach ($config['formatters'] as $containerKey => $error_level) {
                 $formatter = $di->get($containerKey);
                 $formatter->setErrorLimit($error_level);
@@ -49,7 +47,10 @@ class BooBooProvider extends ServiceProvider
                 $runner->pushHandler($handler);
             }
             return $runner;
-        }, true);
+        });
+        $di->add('error_handler', function() use ($di) {
+            return [$di->get('League\BooBoo\Runner'),'register'];
+        });
     }
     
     protected function getConfig()

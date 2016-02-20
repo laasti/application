@@ -25,7 +25,7 @@ Usually used with League/container
 * Notify exceptions by type
 * Manage errors
 
-### Logging PSR2
+### Logging PSR3
 
 ## Input/Output
 

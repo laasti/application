@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Laasti\Application\Http;
+namespace Laasti\Http;
 
 use Psr\Http\Message\ResponseInterface;
 

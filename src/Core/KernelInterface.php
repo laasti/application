@@ -1,6 +1,6 @@
 <?php
 
-namespace Laasti\Application;
+namespace Laasti\Core;
 
 interface KernelInterface
 {

@@ -10,6 +10,8 @@
     ],
     "autoload": {
         "psr-4": {
+            "Laasti\\Core\\": "src/Core/",
+            "Laasti\\Http\\": "src/Http/",
             "Laasti\\Application\\": "src/"
         }
     },

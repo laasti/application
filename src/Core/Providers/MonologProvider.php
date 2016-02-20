@@ -1,10 +1,12 @@
 <?php
 
-namespace Laasti\Application\Providers;
+namespace Laasti\Core\Providers;
 
-use League\Container\ServiceProvider;
+use League\Container\ServiceProvider\AbstractServiceProvider;
+use Monolog\Logger;
 
-class MonologProvider extends ServiceProvider
+
+class MonologProvider extends AbstractServiceProvider
 {
 
     protected $provides = [
@@ -14,7 +16,7 @@ class MonologProvider extends ServiceProvider
     protected $defaultConfig = [
         'channels' => [
             'default' => [
-                'Monolog\Handler\BrowserConsoleHandler' => [\Monolog\Logger::DEBUG]
+                'Monolog\Handler\BrowserConsoleHandler' => [Logger::DEBUG]
             ]
         ]
     ];
@@ -25,19 +27,17 @@ class MonologProvider extends ServiceProvider
         $config = $this->getConfig();
         
         foreach ($config['channels'] as $channel => $handlers) {
-            $di->add('monolog.channel.'.$channel, $this->createLogger($channel, $handlers), true);
+            $di->add('monolog.channels.'.$channel, $this->createLogger($channel, $handlers), true);
         }
         
-        if (!$di->isRegistered('Psr\Log\LoggerInterface')) {
-            $channels = array_keys($config['channels']);
-            $di->add('Psr\Log\LoggerInterface', $di->get('monolog.channel.'.array_shift($channels)));
-        }
+        $channels = array_keys($config['channels']);
+        $di->add('Psr\Log\LoggerInterface', $di->get('monolog.channels.'.array_shift($channels)));
     }
     
     protected function createLogger($channel, $handlers) 
     {
         $di = $this->getContainer();
-        $logger = new \Monolog\Logger($channel);
+        $logger = new Logger($channel);
         foreach ($handlers as $class => $arguments) {
             if (is_string($arguments)) {
                 $logger->pushHandler($di->get($arguments));
@@ -60,6 +60,28 @@ class MonologProvider extends ServiceProvider
         }
         
         return $config;
+    }
+
+    public function provides($alias = null)
+    {
+        $channels = array_keys($this->getConfig());
+        if (!is_null($alias)) {
+            if (in_array($alias, $this->provides)) {
+                return true;
+            }
+            foreach ($channels as $channel) {
+                if ($alias === 'monolog.channels.'.$channel) {
+                    return true;
+                }
+            }
+        }
+
+        $aliases = [];
+        foreach ($channels as $channel) {
+            $aliases[] = 'monolog.channels.'.$channel;
+        }
+
+        return array_merge($this->provides, $aliases);
     }
 
 }

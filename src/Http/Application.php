@@ -1,14 +1,17 @@
 <?php
 
-namespace Laasti\Application;
+namespace Laasti\Http;
 
 use Interop\Container\ContainerInterface;
+use Laasti\Core\ApplicationInterface;
+use Laasti\Core\KernelInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 
-class Application
+class Application implements ApplicationInterface
 {
     
     protected $container;
@@ -17,11 +20,12 @@ class Application
 
     /**
      * Construction
-     * @param Interop\Container\ContainerInterface $container
+     * @param ContainerInterface $container
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, HttpKernelInterface $kernel = null)
     {
         $this->setContainer($container);
+        $this->kernel = $kernel;
         $this->setErrorHandler();
     }
     
@@ -35,8 +39,8 @@ class Application
         if (is_null($this->kernel)) {
             if ($this->container->has('kernel')) {
                 $this->kernel = $this->container->get('kernel');
-            } else if ($this->container->has('Laasti\Application\KernelInterface')) {
-                $this->kernel = $this->container->get('Laasti\Application\KernelInterface');
+            } else if ($this->container->has('Laasti\Http\HttpKernelInterface')) {
+                $this->kernel = $this->container->get('Laasti\Http\HttpKernelInterface');
             } else {
                 throw new RuntimeException('No kernel found in the container. You must register using keyword "kernel" or full interface namespace.');
             }
@@ -87,7 +91,9 @@ class Application
         $this->getKernel()->run($request, $response);
         
         if ($this->getLogger()) {
-            $this->getLogger()->debug('Script execution time: '.number_format(microtime(true) - $request->getServerParams()['REQUEST_TIME_FLOAT'], 3).' s');
+            if ($request instanceof ServerRequestInterface) {
+                $this->getLogger()->debug('Script execution time: '.number_format(microtime(true) - $request->getServerParams()['REQUEST_TIME_FLOAT'], 3).' s');
+            }
             $this->getLogger()->debug('Memory usage: '.number_format(memory_get_usage()/1024/1024, 3).' MB.');
         }
     }
@@ -121,9 +127,25 @@ class Application
         if ($this->getContainer()->has('error_handler')) {
             call_user_func($this->getContainer()->get('error_handler'));
         } else if (class_exists('League\BooBoo\Runner')) {
-            $this->getContainer()->addServiceProvider('Laasti\Application\Providers\BooBooProvider');
+            $this->getContainer()->addServiceProvider('Laasti\Core\Providers\BooBooProvider');
             call_user_func($this->getContainer()->get('error_handler'));
         }
+    }
+
+    public function getConfigArray()
+    {
+        return $this->getContainer()->get('config');
+    }
+
+    public function getConfig($key, $default = null)
+    {
+        return isset($this->getConfigArray()[$key]) ? $this->getConfigArray()[$key] : $default;
+    }
+
+    public function setConfig($key, $value)
+    {
+        $this->getConfigArray()[$key] = $value;
+        return $this;
     }
 
 }
