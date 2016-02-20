@@ -34,6 +34,7 @@ An abstract kernel implementation that takes an input and generate an output usi
 ### Request/Response
 
 Http Kernel implementation takes a PSR7 ServerRequestInterface and outputs a PSR7 ResponseInterface.
+The kernel accepts any callable as a runner, the callable will be passed a request and a response.
 
 ### ConsoleCommand/Result (TODO)
 

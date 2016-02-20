@@ -14,28 +14,23 @@
         }
     },
     "require": {
-        "laasti/peels": "dev-master",
         "psr/http-message": "1.0",
         "container-interop/container-interop": "1.1.0",
         "psr/log": "* 1.0.0"
     },
     "suggest": {
-         "vlucas/valitron": "~1.1",
-         "gregwar/image": "dev-master",
-         "vlucas/spot2": "~2.1",
-         "laasti/mailer": "dev-master",
-         "vlucas/phpdotenv": "~2.0.1",
-         "monolog/monolog": "~1.13",
-        "league/flysystem": "~1.0",
-        "symfony/http-foundation" : "~2.7",
-        "symfony/translation": "~2.7"
+        "laasti/peels": "A middleware stack for HTTP messages (PSR-2)",
+        "zendframework/zend-diactoros": "A HTTP message (PSR-2) implementation",
+        "league/booboo": "A flexible error handler package",
+        "monolog/monolog": "A PSR-3 logger, but you already know it",
+        "league/container": "A great, yet simple container compatible with container-interop"
     },
     "require-dev": {
+        "laasti/peels": "dev-master",
         "zendframework/zend-diactoros": "1.3.3",
         "league/booboo": "~1.0",
         "monolog/monolog": "~1.0",
         "league/container": "~2.0",
-        "laasti/response": "~1.0",
         "hassankhan/config": "0.10.0"
     }
 }

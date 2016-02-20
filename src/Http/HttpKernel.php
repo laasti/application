@@ -6,7 +6,6 @@ namespace Laasti\Application\Http;
 use InvalidArgumentException;
 use Laasti\Application\Http\Emitter;
 use Laasti\Application\Http\EmitterInterface;
-use Laasti\Peels\Http\HttpRunner;
 use Laasti\Application\KernelInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -17,7 +16,7 @@ class HttpKernel implements KernelInterface
     protected $bufferSize;
     protected $emitter;
 
-    public function __construct(HttpRunner $runner, EmitterInterface $emitter = null, $bufferSize = 1024)
+    public function __construct($runner, EmitterInterface $emitter = null, $bufferSize = 1024)
     {
         $this->runner = $runner;
         $this->emitter = $emitter ?: new Emitter;
@@ -28,6 +27,9 @@ class HttpKernel implements KernelInterface
     {
         if (!$request instanceof RequestInterface || !$response instanceof ResponseInterface) {
             throw new InvalidArgumentException("HttpKernel run method requires both instances of RequestInterface and ResponseInterface");
+        }
+        if (!is_callable($this->runner)) {
+            throw new \InvalidArgumentException("HttpKernel's Runner is not callable.");
         }
         $this->emitter->emit(call_user_func_array($this->runner, [$request, $response]), $this->bufferSize);
     }
