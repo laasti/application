@@ -26,6 +26,13 @@ class Application implements ApplicationInterface
     {
         $this->setContainer($container);
         $this->kernel = $kernel;
+
+        ini_set('max_execution_time', $this->getConfig('maxExecutionTime', 300));
+        if (function_exists("set_time_limit") == TRUE AND @ini_get("safe_mode") == 0) {
+            set_time_limit($this->getConfig('maxExecutionTime', 300));
+        }
+        date_default_timezone_set($this->getConfig('timezone', 'America/New_York'));
+
         $this->setErrorHandler();
     }
     
@@ -109,6 +116,10 @@ class Application implements ApplicationInterface
                 return $this->getContainer()->get('logger');
             } else if ($this->getContainer()->has('Psr\Log\LoggerInterface')) {
                 return $this->getContainer()->get('Psr\Log\LoggerInterface');
+            } else if (class_exists('Monolog\Logger')) {
+                $this->getContainer()->addServiceProvider(new \Laasti\Core\Providers\MonologProvider);
+                return $this->getContainer()->get('logger');
+
             }
         }
         
@@ -124,9 +135,12 @@ class Application implements ApplicationInterface
 
     protected function setErrorHandler()
     {
+        error_reporting($this->getConfig('errorReporting', E_ALL | E_STRICT));
+        ini_set('display_errors', $this->getConfig('displayErrors', false));
         if ($this->getContainer()->has('error_handler')) {
             call_user_func($this->getContainer()->get('error_handler'));
         } else if (class_exists('League\BooBoo\Runner')) {
+            $this->getContainer()->addServiceProvider('Laasti\Core\Providers\MonologProvider');
             $this->getContainer()->addServiceProvider('Laasti\Core\Providers\BooBooProvider');
             call_user_func($this->getContainer()->get('error_handler'));
         }
@@ -144,7 +158,12 @@ class Application implements ApplicationInterface
 
     public function setConfig($key, $value)
     {
-        $this->getConfigArray()[$key] = $value;
+        $config = $this->getConfigArray();
+        $config[$key] = $value;
+        //Arrays are not references, we need to push back our modification
+        if (is_array($config)) {
+            $this->getContainer()->add('config', $config);
+        }
         return $this;
     }
 

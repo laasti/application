@@ -15,6 +15,6 @@ class ConfigFilesProvider extends AbstractServiceProvider
     public function register()
     {
         $this->getContainer()->share('Noodlehaus\Config', 'Noodlehaus\Config')->withArgument('config_files');
-        $this->getContainer()->share('config', 'Noodlehaus\Config');
+        $this->getContainer()->share('config', 'Noodlehaus\Config')->withArgument('config_files');
     }
 }

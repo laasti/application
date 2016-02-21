@@ -3,6 +3,7 @@
 namespace Laasti\Core\Providers;
 
 use League\Container\ServiceProvider\AbstractServiceProvider;
+use Monolog\Handler\ErrorLogHandler;
 use Monolog\Logger;
 
 
@@ -10,13 +11,14 @@ class MonologProvider extends AbstractServiceProvider
 {
 
     protected $provides = [
+        'logger',
         'Psr\Log\LoggerInterface'
     ];
     
     protected $defaultConfig = [
         'channels' => [
             'default' => [
-                'Monolog\Handler\BrowserConsoleHandler' => [Logger::DEBUG]
+                'Monolog\Handler\ErrorLogHandler' => [ErrorLogHandler::SAPI, Logger::WARNING]
             ]
         ]
     ];
@@ -31,7 +33,9 @@ class MonologProvider extends AbstractServiceProvider
         }
         
         $channels = array_keys($config['channels']);
-        $di->add('Psr\Log\LoggerInterface', $di->get('monolog.channels.'.array_shift($channels)));
+        $default = array_shift($channels);
+        $di->add('Psr\Log\LoggerInterface', $di->get('monolog.channels.'.$default));
+        $di->add('logger', $di->get('monolog.channels.'.$default));
     }
     
     protected function createLogger($channel, $handlers) 
@@ -64,7 +68,7 @@ class MonologProvider extends AbstractServiceProvider
 
     public function provides($alias = null)
     {
-        $channels = array_keys($this->getConfig());
+        $channels = array_keys($this->getConfig()['channels']);
         if (!is_null($alias)) {
             if (in_array($alias, $this->provides)) {
                 return true;
@@ -80,7 +84,6 @@ class MonologProvider extends AbstractServiceProvider
         foreach ($channels as $channel) {
             $aliases[] = 'monolog.channels.'.$channel;
         }
-
         return array_merge($this->provides, $aliases);
     }
 
