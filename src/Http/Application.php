@@ -136,7 +136,7 @@ class Application implements ApplicationInterface
     protected function setErrorHandler()
     {
         error_reporting($this->getConfig('errorReporting', E_ALL | E_STRICT));
-        ini_set('display_errors', $this->getConfig('displayErrors', false));
+        ini_set('display_errors', $this->getConfig('displayErrors', true));
         if ($this->getContainer()->has('error_handler')) {
             call_user_func($this->getContainer()->get('error_handler'));
         } else if (class_exists('League\BooBoo\Runner')) {
