@@ -17,6 +17,7 @@ class BooBooProvider extends AbstractServiceProvider
     ];
     
     protected $defaultConfig = [
+        'pretty_page' => null,
         //How errors are displayed in the output
         'formatters' => [
             'League\BooBoo\Formatter\HtmlTableFormatter' => E_ALL
@@ -45,6 +46,9 @@ class BooBooProvider extends AbstractServiceProvider
             foreach ($config['handlers'] as $containerKey) {
                 $handler = $di->get($containerKey);
                 $runner->pushHandler($handler);
+            }
+            if (isset($config['pretty_page'])) {
+                $runner->setErrorPageFormatter($di->get($config['pretty_page']));
             }
             return $runner;
         });
