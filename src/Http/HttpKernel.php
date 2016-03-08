@@ -12,13 +12,13 @@ use Psr\Http\Message\ResponseInterface;
 
 class HttpKernel implements HttpKernelInterface, KernelInterface
 {
-    protected $runner;
+    protected $callable;
     protected $bufferSize;
     protected $emitter;
 
-    public function __construct($runner, EmitterInterface $emitter = null, $bufferSize = 1024)
+    public function __construct(callable $callable, EmitterInterface $emitter = null, $bufferSize = 1024)
     {
-        $this->runner = $runner;
+        $this->callable = $callable;
         $this->emitter = $emitter ?: new Emitter;
         $this->bufferSize = $bufferSize;
     }
@@ -28,10 +28,10 @@ class HttpKernel implements HttpKernelInterface, KernelInterface
         if (!$request instanceof RequestInterface || !$response instanceof ResponseInterface) {
             throw new InvalidArgumentException("HttpKernel run method requires both instances of RequestInterface and ResponseInterface");
         }
-        if (!is_callable($this->runner)) {
-            throw new \InvalidArgumentException("HttpKernel's Runner is not callable.");
+        if (!is_callable($this->callable)) {
+            throw new \InvalidArgumentException("HttpKernel does not have a valid callable.");
         }
-        $this->emitter->emit(call_user_func_array($this->runner, [$request, $response]), $this->bufferSize);
+        $this->emitter->emit(call_user_func_array($this->callable, [$request, $response]), $this->bufferSize);
     }
     
     public function setBufferSize($bufferSize)
@@ -40,9 +40,9 @@ class HttpKernel implements HttpKernelInterface, KernelInterface
         return $this;
     }
 
-    public function setRunner($runner)
+    public function setCallable(callable $runner)
     {
-        $this->runner = $runner;
+        $this->callable = $runner;
     }
 
     public function setEmitter($emitter)
