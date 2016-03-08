@@ -22,10 +22,9 @@ class Application implements ApplicationInterface
      * Construction
      * @param ContainerInterface $container
      */
-    public function __construct(ContainerInterface $container, HttpKernelInterface $kernel = null)
+    public function __construct(ContainerInterface $container)
     {
         $this->setContainer($container);
-        $this->kernel = $kernel;
 
         ini_set('max_execution_time', $this->getConfig('maxExecutionTime', 300));
         if (function_exists("set_time_limit") == TRUE AND @ini_get("safe_mode") == 0) {
