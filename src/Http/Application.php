@@ -13,7 +13,7 @@ use RuntimeException;
 
 class Application implements ApplicationInterface
 {
-    
+
     protected $container;
     protected $kernel;
     protected $logger;
@@ -32,9 +32,10 @@ class Application implements ApplicationInterface
         }
         date_default_timezone_set($this->getConfig('timezone', 'America/New_York'));
 
-        $this->setErrorHandler();
+        error_reporting($this->getConfig('errorReporting', E_ALL | E_STRICT));
+        ini_set('display_errors', $this->getConfig('displayErrors', true));
     }
-    
+
     public function getContainer()
     {
         return $this->container;
@@ -51,7 +52,7 @@ class Application implements ApplicationInterface
                 throw new RuntimeException('No kernel found in the container. You must register using keyword "kernel" or full interface namespace.');
             }
         }
-        
+
         return $this->kernel;
     }
 
@@ -67,7 +68,7 @@ class Application implements ApplicationInterface
         return $this;
     }
 
-    
+
     /**
      * Handles the request and delivers the response through the stack
      *
@@ -76,13 +77,13 @@ class Application implements ApplicationInterface
      */
     public function run(RequestInterface $request = null, ResponseInterface $response = null)
     {
-        
+
         if (is_null($request)) {
             if (!$this->getContainer()->has('request')) {
                 if ($this->getContainer()->has('Psr\Http\Message\ServerRequestInterface')) {
                     $this->getContainer()->add('request', 'Psr\Http\Message\ServerRequestInterface');
                 } else if ($this->getContainer()->has('Psr\Http\Message\RequestInterface')) {
-                    $this->getContainer()->add('request', 'Psr\Http\Message\RequestInterface');           
+                    $this->getContainer()->add('request', 'Psr\Http\Message\RequestInterface');
                 }
             }
             $request = $this->getContainer()->get('request');
@@ -93,9 +94,13 @@ class Application implements ApplicationInterface
             }
             $response = $this->getContainer()->get('response');
         }
-        
+
+        $this->getContainer()->add('request', $request);
+        $this->getContainer()->add('response', $response);
+
+        $this->setErrorHandler();
         $this->getKernel()->run($request, $response);
-        
+
         if ($this->getLogger()) {
             if ($request instanceof ServerRequestInterface) {
                 $this->getLogger()->debug('Script execution time: '.number_format(microtime(true) - $request->getServerParams()['REQUEST_TIME_FLOAT'], 3).' s');
@@ -121,11 +126,11 @@ class Application implements ApplicationInterface
 
             }
         }
-        
+
         return $this->logger;
     }
-    
-    
+
+
     public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;
@@ -134,8 +139,6 @@ class Application implements ApplicationInterface
 
     protected function setErrorHandler()
     {
-        error_reporting($this->getConfig('errorReporting', E_ALL | E_STRICT));
-        ini_set('display_errors', $this->getConfig('displayErrors', true));
         if ($this->getContainer()->has('error_handler')) {
             call_user_func($this->getContainer()->get('error_handler'));
         } else if (class_exists('League\BooBoo\Runner')) {
