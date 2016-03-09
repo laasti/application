@@ -13,17 +13,17 @@ use ReflectionClass;
 class PrettyBooBooFormatter extends AbstractFormatter
 {
 
-    protected $handlers;
+    protected $handlers = [];
     protected $kernel;
     protected $request;
     protected $response;
 
-    public function __construct($handlers, HttpKernel $kernel, ServerRequestInterface $request, ResponseInterface $response)
+    public function __construct(HttpKernel $kernel, ServerRequestInterface $request, ResponseInterface $response, $handlers = [])
     {
-        $this->handlers = $handlers;
         $this->kernel = $kernel;
         $this->request = $request;
         $this->response = $response;
+        $this->addHandlers($handlers);
     }
     
     public function format(Exception $e)
@@ -31,6 +31,20 @@ class PrettyBooBooFormatter extends AbstractFormatter
         $callable = $this->getCallable($e);
         $this->kernel->setRunner($callable);
         $this->kernel->run($this->request, $this->response);
+    }
+
+    public function setHandler($exceptionClass, $handler)
+    {
+        $this->handlers[$exceptionClass] = $handler;
+        return $this;
+    }
+
+    public function addHandlers($handlers)
+    {
+        foreach ($handlers as $exceptionClass => $handler) {
+            $this->setHandler($exceptionClass, $handler);
+        }
+        return $this;
     }
 
     protected function getCallable(Exception $e)
