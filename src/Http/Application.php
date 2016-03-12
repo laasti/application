@@ -121,7 +121,7 @@ class Application implements ApplicationInterface
             } else if ($this->getContainer()->has('Psr\Log\LoggerInterface')) {
                 return $this->getContainer()->get('Psr\Log\LoggerInterface');
             } else if (class_exists('Monolog\Logger')) {
-                $this->getContainer()->addServiceProvider(new \Laasti\Core\Providers\MonologProvider);
+                $this->getContainer()->addServiceProvider(new \Laasti\Log\MonologProvider);
                 return $this->getContainer()->get('logger');
 
             }
@@ -142,7 +142,7 @@ class Application implements ApplicationInterface
         if ($this->getContainer()->has('error_handler')) {
             call_user_func($this->getContainer()->get('error_handler'));
         } else if (class_exists('League\BooBoo\Runner')) {
-            $this->getContainer()->addServiceProvider('Laasti\Core\Providers\MonologProvider');
+            $this->getContainer()->addServiceProvider('Laasti\Log\MonologProvider');
             $this->getContainer()->addServiceProvider('Laasti\Core\Providers\BooBooProvider');
             call_user_func($this->getContainer()->get('error_handler'));
         }

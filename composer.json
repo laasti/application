@@ -12,7 +12,8 @@
         "psr-4": {
             "Laasti\\Core\\": "src/Core/",
             "Laasti\\Http\\": "src/Http/",
-            "Laasti\\Application\\": "src/"
+            "Laasti\\Application\\": "src/",
+            "Laasti\\Log\\": "src/Log/"
         }
     },
     "require": {

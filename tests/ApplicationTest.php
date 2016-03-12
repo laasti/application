@@ -19,7 +19,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $container = new Container;
         $container->add('config', []);
         $container->add('kernel', new HttpKernel(function($request, $response) {return $response;}, $emitter));
-        $container->addServiceProvider(new \Laasti\Core\Providers\MonologProvider());
+        $container->addServiceProvider(new \Laasti\Log\MonologProvider());
         $app = new Application($container);
         $app->run(new Request, new Response\TextResponse('Hello World'));
     }

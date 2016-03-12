@@ -1,13 +1,14 @@
 <?php
 
-namespace Laasti\Core\Providers;
+namespace Laasti\Log;
 
 use League\Container\ServiceProvider\AbstractServiceProvider;
+use League\Container\ServiceProvider\BootableServiceProviderInterface;
 use Monolog\Handler\ErrorLogHandler;
 use Monolog\Logger;
 
 
-class MonologProvider extends AbstractServiceProvider
+class MonologProvider extends AbstractServiceProvider implements BootableServiceProviderInterface
 {
 
     protected $provides = [
@@ -87,4 +88,9 @@ class MonologProvider extends AbstractServiceProvider
         return array_merge($this->provides, $aliases);
     }
 
+    public function boot()
+    {
+        $this->getContainer()->inflector('Laasti\Log\LoggerAwareInterface')
+             ->invokeMethod('setLogger', ['Psr\Log\LoggerInterface']);
+    }
 }

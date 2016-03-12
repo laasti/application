@@ -12,7 +12,7 @@ class HttpKernelTest extends \PHPUnit_Framework_TestCase
 
     public function testHttpKernel()
     {
-        $kernel = new HttpKernel(new HttpRunner([function($request, $response, $next) {return $response;}]));
+        $kernel = new HttpKernel(new HttpRunner(new \Laasti\Peels\MiddlewareResolver(), [function($request, $response, $next) {return $response;}]));
         $this->setExpectedException('RuntimeException');
         $kernel->run(new ServerRequest, new TextResponse('Test'));
     }
