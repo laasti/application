@@ -15,12 +15,14 @@ class PrettyBooBooFormatter extends AbstractFormatter
 
     protected $handlers = [];
     protected $kernel;
+    protected $runner;
     protected $request;
     protected $response;
 
-    public function __construct(HttpKernel $kernel, $handlers = [])
+    public function __construct(HttpKernel $kernel, \Laasti\Peels\Http\HttpRunner $runner = null, $handlers = [])
     {
         $this->kernel = $kernel;
+        $this->runner = $runner;
         $this->addHandlers($handlers);
     }
 
@@ -39,7 +41,12 @@ class PrettyBooBooFormatter extends AbstractFormatter
     public function format(Exception $e)
     {
         $callable = $this->getCallable($e);
-        $this->kernel->setCallable($callable);
+        if ($this->runner instanceof \Laasti\Peels\Http\HttpRunner) {
+            $this->runner->push($callable);
+            $this->kernel->setCallable($this->runner);
+        } else {
+            $this->kernel->setCallable($callable);
+        }
         $this->kernel->run($this->request->withAttribute('exception', $e), $this->response);
         exit;
     }
