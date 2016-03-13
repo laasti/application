@@ -18,19 +18,30 @@ class PrettyBooBooFormatter extends AbstractFormatter
     protected $request;
     protected $response;
 
-    public function __construct(HttpKernel $kernel, ServerRequestInterface $request, ResponseInterface $response, $handlers = [])
+    public function __construct(HttpKernel $kernel, $handlers = [])
     {
         $this->kernel = $kernel;
-        $this->request = $request;
-        $this->response = $response;
         $this->addHandlers($handlers);
+    }
+
+    public function setRequest(ServerRequestInterface $request)
+    {
+        $this->request = $request;
+        return $this;
+    }
+
+    public function setResponse(ResponseInterface $response)
+    {
+        $this->response = $response;
+        return $this;
     }
     
     public function format(Exception $e)
     {
         $callable = $this->getCallable($e);
-        $this->kernel->setRunner($callable);
-        $this->kernel->run($this->request, $this->response);
+        $this->kernel->setCallable($callable);
+        $this->kernel->run($this->request->withAttribute('exception', $e), $this->response);
+        exit;
     }
 
     public function setHandler($exceptionClass, $handler)
