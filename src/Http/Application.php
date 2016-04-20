@@ -59,6 +59,8 @@ class Application implements ApplicationInterface
     public function setContainer(ContainerInterface $container)
     {
         $this->container = $container;
+        $container->share('container', $container);
+        $container->share('Interop\Container\ContainerInterface', $container);
         return $this;
     }
 
@@ -90,7 +92,7 @@ class Application implements ApplicationInterface
         }
         if (is_null($response)) {
             if (!$this->getContainer()->has('response') && $this->getContainer()->has('Psr\Http\Message\ResponseInterface')) {
-                $this->getContainer()->add('request', 'Psr\Http\Message\ServerRequestInterface');
+                $this->getContainer()->add('response', 'Psr\Http\Message\ResponseInterface');
             }
             $response = $this->getContainer()->get('response');
         }
