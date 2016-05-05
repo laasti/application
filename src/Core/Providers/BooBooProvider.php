@@ -14,7 +14,8 @@ class BooBooProvider extends AbstractServiceProvider
         'error_handler',
         'League\BooBoo\Runner',
         'League\BooBoo\Formatter\HtmlTableFormatter',
-        'League\BooBoo\Handler\LogHandler'
+        'League\BooBoo\Handler\LogHandler',
+        'Laasti\Core\Exceptions\LogHandler',
     ];
 
     protected $defaultConfig = [
@@ -26,7 +27,7 @@ class BooBooProvider extends AbstractServiceProvider
         ],
         //How errors are handled (logging, sending e-mails...)
         'handlers' => [
-            'League\BooBoo\Handler\LogHandler'
+            'Laasti\Core\Exceptions\LogHandler'
         ]
     ];
 
@@ -36,6 +37,7 @@ class BooBooProvider extends AbstractServiceProvider
         $config = $this->getConfig();
 
         $di->add('League\BooBoo\Handler\LogHandler')->withArgument('Psr\Log\LoggerInterface');
+        $di->add('Laasti\Core\Exceptions\LogHandler')->withArgument('Psr\Log\LoggerInterface');
         $di->add('League\BooBoo\Formatter\HtmlTableFormatter');
 
         if ($di->has('peels.exceptions')) {
