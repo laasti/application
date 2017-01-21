@@ -7,6 +7,15 @@ trait LoggerAwareTrait
     protected $logger;
 
     /**
+     * Get logger
+     * @return \Psr\Log\LoggerInterface
+     */
+    public function getLogger()
+    {
+        return $this->logger;
+    }
+
+    /**
      * Set logger
      * @param \Psr\Log\LoggerInterface $logger
      * @return $this
@@ -15,14 +24,5 @@ trait LoggerAwareTrait
     {
         $this->logger = $logger;
         return $this;
-    }
-
-    /**
-     * Get logger
-     * @return \Psr\Log\LoggerInterface
-     */
-    public function getLogger()
-    {
-        return $this->logger;
     }
 }

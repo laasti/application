@@ -1,25 +1,35 @@
 {
     "name": "laasti/application",
     "description": "The core for the Laasti Framework.",
+    "type": "library",
     "license": "MIT",
     "authors": [
         {
             "name": "Sonia Marquette",
-            "email": "contact@nebulousweb.com"
+            "email": "contact@nebulousweb.com",
+            "homepage": "http://nebulousweb.com/",
+            "role": "Developer"
         }
     ],
-    "autoload": {
-        "psr-4": {
-            "Laasti\\Core\\": "src/Core/",
-            "Laasti\\Http\\": "src/Http/",
-            "Laasti\\Application\\": "src/",
-            "Laasti\\Log\\": "src/Log/"
-        }
+    "support": {
+        "issues": "https://github.com/laasti/application/issues",
+        "wiki": "https://github.com/laasti/application/wiki"
     },
     "require": {
+        "php": "~5.6|~7.0",
         "psr/http-message": "1.0",
         "container-interop/container-interop": "1.1.0",
         "psr/log": "* 1.0.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.0||~5.0",
+        "squizlabs/php_codesniffer": "^2.3",
+        "laasti/peels": "dev-master",
+        "zendframework/zend-diactoros": "1.3.3",
+        "league/booboo": "~1.0",
+        "monolog/monolog": "~1.0",
+        "league/container": "~2.0",
+        "hassankhan/config": "0.10.0"
     },
     "suggest": {
         "laasti/peels": "A middleware stack for HTTP messages (PSR-2)",
@@ -28,12 +38,25 @@
         "monolog/monolog": "A PSR-3 logger, but you already know it",
         "league/container": "A great, yet simple container compatible with container-interop"
     },
-    "require-dev": {
-        "laasti/peels": "dev-master",
-        "zendframework/zend-diactoros": "1.3.3",
-        "league/booboo": "~1.0",
-        "monolog/monolog": "~1.0",
-        "league/container": "~2.0",
-        "hassankhan/config": "0.10.0"
+    "autoload": {
+        "psr-4": {
+            "Laasti\\Core\\": "src/Core/",
+            "Laasti\\Http\\": "src/Http/",
+            "Laasti\\Application\\": "src/",
+            "Laasti\\Log\\": "src/Log/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "scripts": {
+        "test": "phpunit",
+        "check-style": "phpcs -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src tests",
+        "fix-style": "phpcbf -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src tests"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
     }
 }
