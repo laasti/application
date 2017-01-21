@@ -5,8 +5,6 @@ namespace Laasti\Http;
 
 use InvalidArgumentException;
 use Laasti\Core\KernelInterface;
-use Laasti\Http\Emitter;
-use Laasti\Http\EmitterInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -33,7 +31,7 @@ class HttpKernel implements HttpKernelInterface, KernelInterface
         }
         $this->emitter->emit(call_user_func_array($this->callable, [$request, $response]), $this->bufferSize);
     }
-    
+
     public function setBufferSize($bufferSize)
     {
         $this->bufferSize = $bufferSize;

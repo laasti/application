@@ -7,7 +7,6 @@ use League\Container\ServiceProvider\BootableServiceProviderInterface;
 use Monolog\Handler\ErrorLogHandler;
 use Monolog\Logger;
 
-
 class MonologProvider extends AbstractServiceProvider implements BootableServiceProviderInterface
 {
 
@@ -15,7 +14,7 @@ class MonologProvider extends AbstractServiceProvider implements BootableService
         'logger',
         'Psr\Log\LoggerInterface'
     ];
-    
+
     protected $defaultConfig = [
         'channels' => [
             'default' => [
@@ -28,18 +27,31 @@ class MonologProvider extends AbstractServiceProvider implements BootableService
     {
         $di = $this->getContainer();
         $config = $this->getConfig();
-        
+
         foreach ($config['channels'] as $channel => $handlers) {
-            $di->add('monolog.channels.'.$channel, $this->createLogger($channel, $handlers), true);
+            $di->add('monolog.channels.' . $channel, $this->createLogger($channel, $handlers), true);
         }
-        
+
         $channels = array_keys($config['channels']);
         $default = array_shift($channels);
-        $di->add('Psr\Log\LoggerInterface', $di->get('monolog.channels.'.$default));
-        $di->add('logger', $di->get('monolog.channels.'.$default));
+        $di->add('Psr\Log\LoggerInterface', $di->get('monolog.channels.' . $default));
+        $di->add('logger', $di->get('monolog.channels.' . $default));
     }
-    
-    protected function createLogger($channel, $handlers) 
+
+    protected function getConfig()
+    {
+        $di = $this->getContainer();
+        $diConfig = $di->get('config');
+        if (isset($diConfig['monolog']) && is_array($diConfig['monolog'])) {
+            $config = array_merge($this->defaultConfig, $diConfig['monolog']);
+        } else {
+            $config = $this->defaultConfig;
+        }
+
+        return $config;
+    }
+
+    protected function createLogger($channel, $handlers)
     {
         $di = $this->getContainer();
         $logger = new Logger($channel);
@@ -53,19 +65,6 @@ class MonologProvider extends AbstractServiceProvider implements BootableService
         }
         return $logger;
     }
-    
-    protected function getConfig()
-    {
-        $di = $this->getContainer();
-        $diConfig = $di->get('config');
-        if (isset($diConfig['monolog']) && is_array($diConfig['monolog'])) {
-            $config = array_merge($this->defaultConfig, $diConfig['monolog']);
-        } else {
-            $config = $this->defaultConfig;
-        }
-        
-        return $config;
-    }
 
     public function provides($alias = null)
     {
@@ -75,7 +74,7 @@ class MonologProvider extends AbstractServiceProvider implements BootableService
                 return true;
             }
             foreach ($channels as $channel) {
-                if ($alias === 'monolog.channels.'.$channel) {
+                if ($alias === 'monolog.channels.' . $channel) {
                     return true;
                 }
             }
@@ -83,7 +82,7 @@ class MonologProvider extends AbstractServiceProvider implements BootableService
 
         $aliases = [];
         foreach ($channels as $channel) {
-            $aliases[] = 'monolog.channels.'.$channel;
+            $aliases[] = 'monolog.channels.' . $channel;
         }
         return array_merge($this->provides, $aliases);
     }
@@ -91,6 +90,6 @@ class MonologProvider extends AbstractServiceProvider implements BootableService
     public function boot()
     {
         $this->getContainer()->inflector('Laasti\Log\LoggerAwareInterface')
-             ->invokeMethod('setLogger', ['Psr\Log\LoggerInterface']);
+            ->invokeMethod('setLogger', ['Psr\Log\LoggerInterface']);
     }
 }

@@ -26,6 +26,20 @@ class PrettyBooBooFormatter extends AbstractFormatter
         $this->addHandlers($handlers);
     }
 
+    public function addHandlers($handlers)
+    {
+        foreach ($handlers as $exceptionClass => $handler) {
+            $this->setHandler($exceptionClass, $handler);
+        }
+        return $this;
+    }
+
+    public function setHandler($exceptionClass, $handler)
+    {
+        $this->handlers[$exceptionClass] = $handler;
+        return $this;
+    }
+
     public function setRequest(ServerRequestInterface $request)
     {
         $this->request = $request;
@@ -37,7 +51,7 @@ class PrettyBooBooFormatter extends AbstractFormatter
         $this->response = $response;
         return $this;
     }
-    
+
     public function format(Exception $e)
     {
         $callable = $this->getCallable($e);
@@ -49,20 +63,6 @@ class PrettyBooBooFormatter extends AbstractFormatter
         }
         $this->kernel->run($this->request->withAttribute('exception', $e), $this->response);
         exit;
-    }
-
-    public function setHandler($exceptionClass, $handler)
-    {
-        $this->handlers[$exceptionClass] = $handler;
-        return $this;
-    }
-
-    public function addHandlers($handlers)
-    {
-        foreach ($handlers as $exceptionClass => $handler) {
-            $this->setHandler($exceptionClass, $handler);
-        }
-        return $this;
     }
 
     protected function getCallable(Exception $e)
@@ -86,8 +86,7 @@ class PrettyBooBooFormatter extends AbstractFormatter
                 return $this->handlers[$parent->getName()];
             }
         }
-        
+
         return $this->handlers['Exception'];
     }
-
 }

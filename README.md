@@ -1,107 +1,81 @@
-# Laasti/application
+# Laasti / Application
 
-The core of the Laasti framework.
+[![Latest Version on Packagist][ico-version]][link-packagist]
+[![Software License][ico-license]](LICENSE.md)
+[![Build Status][ico-travis]][link-travis]
+[![Coverage Status][ico-scrutinizer]][link-scrutinizer]
+[![Quality Score][ico-code-quality]][link-code-quality]
+[![Total Downloads][ico-downloads]][link-downloads]
 
-Maximizes flexibility with the use of standards and callables.
+This is where your description should go. Try and limit it to a paragraph or two, and maybe throw in a mention of what
+PSRs you support to avoid any confusion with users and contributors.
 
-Provides basic services that any apps need:
+## Structure
 
-## The core
-
-### Dependency Injection with Container Interop
-
-Reserved words: config, response, request, kernel, error_handler
-Usually used with League/container
-
-### Application configuration
-
-* Multiple environments (develop, tests, staging, production...)
-* An ArrayAccess implementation or plain array registered to the config container key
-
-### Error handling (TODO)
-
-* Reroute exceptions
-* Handle exception by types
-* Notify exceptions by type
-* Manage errors
-
-### Logging PSR3
-
-## Input/Output
-
-An abstract kernel implementation that takes an input and generate an output using middlewares.
-
-### Request/Response
-
-Http Kernel implementation takes a PSR7 ServerRequestInterface and outputs a PSR7 ResponseInterface.
-The kernel accepts any callable as a runner, the callable will be passed a request and a response.
-
-### ConsoleCommand/Result (TODO)
-
-Console Kernel takes a command and displays the result
-
-## Http Stuff, optional packages
-
-### Psr7 Helpers and Cookie (TODO)
-
-A cookie object that you can easily attach to your responses (```withHeader('Set-Cookie', (string) $cookie)```)
-
-### Routing (TODO)
-
-laasti/route: An elegant wrapper for nikic fast routes
-
-### Session (TODO)
-
-A simple session handler (defaults to native)
-
-### Commands and command bus (TODO)
-
-chief
-
-### Database access (TODO)
-
-DBAL
-
-## Installation
+If any of the following are applicable to your project, then the directory structure should follow industry best practises by being named the following.
 
 ```
-composer require laasti/application
+bin/        
+config/
+src/
+tests/
+vendor/
+```
+
+
+## Install
+
+Via Composer
+
+``` bash
+$ composer require laasti/application
 ```
 
 ## Usage
 
-```php
-$config = [
-    'routes' => [
-        ['GET', '/welcome', 'MyControllerClass::welcome'],
-    ],
-];
-$app = new Laasti\Application\Application();
+``` php
+$skeleton = new League\Skeleton();
+echo $skeleton->echoPhrase('Hello, League!');
+```
 
-$app->run(Symfony\Component\HttpFoundation\Request::create('/welcome')); //Outputs
+## Change log
 
+Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
+
+## Testing
+
+``` bash
+$ composer test
 ```
 
 ## Contributing
 
-1. Fork it!
-2. Create your feature branch: `git checkout -b my-new-feature`
-3. Commit your changes: `git commit -am 'Add some feature'`
-4. Push to the branch: `git push origin my-new-feature`
-5. Submit a pull request :D
+Please see [CONTRIBUTING](CONTRIBUTING.md) and [CONDUCT](CONDUCT.md) for details.
 
-## History
+## Security
 
-See CHANGELOG.md for more information.
+If you discover any security related issues, please email contact@nebulousweb.com instead of using the issue tracker.
 
 ## Credits
 
-Author: Sonia Marquette (@nebulousGirl)
+- [Sonia Marquette][link-author]
+- [All Contributors][link-contributors]
 
 ## License
 
-Released under the MIT License. See LICENSE.txt file.
+The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
 
+[ico-version]: https://img.shields.io/packagist/v/laasti/application.svg?style=flat-square
+[ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
+[ico-travis]: https://img.shields.io/travis/laasti/application/master.svg?style=flat-square
+[ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/laasti/application.svg?style=flat-square
+[ico-code-quality]: https://img.shields.io/scrutinizer/g/laasti/application.svg?style=flat-square
+[ico-downloads]: https://img.shields.io/packagist/dt/laasti/application.svg?style=flat-square
 
-
-
+[link-packagist]: https://packagist.org/packages/laasti/application
+[link-travis]: https://travis-ci.org/laasti/application
+[link-scrutinizer]: https://scrutinizer-ci.com/g/laasti/application/code-structure
+[link-code-quality]: https://scrutinizer-ci.com/g/laasti/application
+[link-downloads]: https://packagist.org/packages/laasti/application
+[link-author]: https://github.com/nebulousGirl
+[link-contributors]: ../../contributors

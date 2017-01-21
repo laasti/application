@@ -5,7 +5,6 @@ namespace Laasti\Core\Providers;
 use League\BooBoo\Runner;
 use League\Container\ServiceProvider\AbstractServiceProvider;
 
-
 class BooBooProvider extends AbstractServiceProvider
 {
     const CLASS_METHOD_EXTRACTOR = "/^(.+)::(.+)$/";
@@ -49,7 +48,7 @@ class BooBooProvider extends AbstractServiceProvider
         }
 
         $self = $this;
-        $di->share('error_formatter', function($kernel, $runner, $request, $response) use ($config, $self) {
+        $di->share('error_formatter', function ($kernel, $runner, $request, $response) use ($config, $self) {
             $formatter = new \Laasti\Core\Exceptions\PrettyBooBooFormatter($kernel, $runner);
             foreach ($config['exception_handlers'] as $exceptionClass => $handler) {
                 $formatter->setHandler($exceptionClass, $self->resolve($handler));
@@ -58,7 +57,7 @@ class BooBooProvider extends AbstractServiceProvider
             return $formatter;
         })->withArguments(array_merge($args, ['request', 'response']));
 
-        $di->share('League\BooBoo\Runner', function() use ($di, $config) {
+        $di->share('League\BooBoo\Runner', function () use ($di, $config) {
             $runner = new Runner();
             foreach ($config['formatters'] as $containerKey => $error_level) {
                 $formatter = $di->get($containerKey);
@@ -74,8 +73,8 @@ class BooBooProvider extends AbstractServiceProvider
             }
             return $runner;
         });
-        $di->add('error_handler', function() use ($di) {
-            return [$di->get('League\BooBoo\Runner'),'register'];
+        $di->add('error_handler', function () use ($di) {
+            return [$di->get('League\BooBoo\Runner'), 'register'];
         });
     }
 
@@ -99,13 +98,13 @@ class BooBooProvider extends AbstractServiceProvider
             if ($this->getContainer()->has($class)) {
                 return [$this->getContainer()->get($class), $method];
             }
-        } else if (is_string($callable) && $this->getContainer()->has($callable)) {
+        } elseif (is_string($callable) && $this->getContainer()->has($callable)) {
             return $this->getContainer()->get($callable);
         }
 
         if (is_callable($callable)) {
             return $callable;
         }
-        throw new \InvalidArgumentException('Callable not resolvable: '.(is_object($callable) ? get_class($callable) : $callable));
+        throw new \InvalidArgumentException('Callable not resolvable: ' . (is_object($callable) ? get_class($callable) : $callable));
     }
 }
