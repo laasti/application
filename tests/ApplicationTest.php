@@ -14,7 +14,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     public function testApplication()
     {
         $this->expectOutputString('Hello World');
-        $emitter = $this->getMock('Laasti\Http\EmitterInterface');
+        $emitter = $this->createMock('Laasti\Http\EmitterInterface');
         $emitter->expects($this->once())->method('emit')->will($this->returnCallback(function($response) {echo $response->getBody();}));
         $container = new Container;
         $container->add('config', []);
